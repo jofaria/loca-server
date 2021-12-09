@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.model");
+const Owner = require("../models/owner.model");
+// const User = require("../models/user.model");
 
 const { isAuthenticated, isAdmin } = require("./../middleware/jwt.middleware");
 
@@ -12,11 +13,13 @@ const saltRounds = 10;
 router.post("/auth/signup", async (req, res, next) => {
   try {
     // Get the data from req.body
-    const { email, password, name } = req.body;
+    const { email, password, username, phone } = req.body;
 
     // Validate that values are not empty strings
-    if (email === "" || password === "" || name === "") {
-      res.status(400).json({ message: "Provide email, password and name." });
+    if (email === "" || password === "" || username === "" || phone === "") {
+      res
+        .status(400)
+        .json({ message: "Provide email, password, username, and phone." });
       return;
     }
 
@@ -39,9 +42,9 @@ router.post("/auth/signup", async (req, res, next) => {
     }
 
     // Check if email is not taken
-    const foundUser = await User.findOne({ email });
+    const foundOwner = await Owner.findOne({ email });
 
-    if (foundUser) {
+    if (foundOwner) {
       res.status(400).json({ message: "Provide a valid email" });
       return;
     }
@@ -51,21 +54,23 @@ router.post("/auth/signup", async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create the new user in the DB
-    const createdUser = await User.create({
+    const createdOwner = await Owner.create({
       email,
       password: hashedPassword,
-      name,
+      username,
+      phone,
     });
 
     // We should never expose passwords publicly
-    const user = {
-      _id: createdUser._id,
-      email: createdUser.email,
-      name: createdUser.name,
+    const owner = {
+      _id: createdOwner._id,
+      email: createdOwner.email,
+      username: createdOwner.username,
+      phone: createdOwner.phone,
     };
 
     // Send the response back
-    res.status(201).json({ user: user });
+    res.status(201).json({ owner: owner });
   } catch (error) {
     next(error);
   }
@@ -84,24 +89,24 @@ router.post("/auth/login", async (req, res, next) => {
     }
 
     // Check if the user exists
-    const foundUser = await User.findOne({ email: email });
+    const foundOwner = await Owner.findOne({ email: email });
 
-    if (!foundUser) {
+    if (!foundOwner) {
       res.status(400).json({ message: "Provide a valid email" });
       return;
     }
 
     //  Compare the provided password with one from debugger
-    const passwordCorrect = await bcrypt.compare(password, foundUser.password);
+    const passwordCorrect = await bcrypt.compare(password, foundOwner.password);
 
     if (passwordCorrect) {
       // We should never expose passwords publicly
       const payload = {
-        _id: foundUser._id,
-        email: foundUser.email,
-        name: foundUser.name,
-        role: foundUser.role, // 'admin' or 'user'
-        image: foundUser.image, 
+        _id: foundOwner._id,
+        email: foundOwner.email,
+        username: foundOwner.name,
+        role: foundOwner.role, // 'admin' or 'user'
+        image: foundOwner.image,
       };
 
       // Create a JWT with the payload

@@ -7,7 +7,7 @@ const storeSchema = new Schema({
     unique: true,
     required: true,
   },
-  storeOwner: { type: Schema.Types.ObjectId, ref: "Owner" },
+  storeOwner: { type: Schema.Types.ObjectId, ref: "Owner", default: null },
   logo: { type: String, required: true },
   coverImg: {
     type: String,
@@ -35,7 +35,6 @@ const storeSchema = new Schema({
       ],
     },
   ],
-  products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
   website: String,
   instagram: String,
 });

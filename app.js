@@ -27,6 +27,9 @@ app.use("/", ownerRoutes);
 const storeRoutes = require("./routes/store.routes");
 app.use("/", storeRoutes);
 
+const productRoutes = require("./routes/product.routes");
+app.use("/", productRoutes);
+
 // const userRoutes = require("./routes/user.routes");
 // app.use("/", userRoutes);
 

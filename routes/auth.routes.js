@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const Owner = require("../models/owner.model");
 // const User = require("../models/user.model");
 
-const { isAuthenticated, isAdmin } = require("./../middleware/jwt.middleware");
+const { isAuthenticated } = require("./../middleware/jwt.middleware");
 
 const saltRounds = 10;
 

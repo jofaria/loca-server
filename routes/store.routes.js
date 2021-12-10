@@ -4,14 +4,19 @@ const Store = require("./../models/store.model");
 const { isAuthenticated } = require("./../middleware/jwt.middleware");
 
 // remove middleware and the user variables when testing
-router.post("/api/stores", async (req, res, next) => {
+router.post("/api/stores", isAuthenticated, async (req, res, next) => {
   try {
     // get the user that is logged in and populate the owner
-    // const currentUserId = req.payload._id;
+
+    const currentUserId = req.payload;
+    console.log("IN IT");
+    console.log(req.payload);
+    console.log(req.payload._id);
 
     const {
       storeName,
       logo,
+      storeOwner,
       coverImg,
       location,
       description,
@@ -24,7 +29,7 @@ router.post("/api/stores", async (req, res, next) => {
 
     const newStore = await Store.create({
       storeName,
-      //storeOwner: currentUserId,
+      storeOwner: currentUserId,
       logo,
       coverImg,
       location,
@@ -33,6 +38,8 @@ router.post("/api/stores", async (req, res, next) => {
       website,
       instagram,
     });
+
+    console.log(currentUserId);
 
     res.status(201).json(newStore);
   } catch (error) {
@@ -59,7 +66,7 @@ router.get("/api/stores/:storeId", async (req, res, next) => {
   }
 });
 
-router.put("/api/stores/:storeId", async (req, res, next) => {
+router.put("/api/stores/:storeId", isAuthenticated, async (req, res, next) => {
   try {
     const { storeId } = req.params;
 
@@ -95,15 +102,19 @@ router.put("/api/stores/:storeId", async (req, res, next) => {
   }
 });
 
-router.delete("/api/stores/:storeId", async (req, res, next) => {
-  try {
-    const { storeId } = req.params;
-    await Store.findByIdAndRemove(storeId);
+router.delete(
+  "/api/stores/:storeId",
+  isAuthenticated,
+  async (req, res, next) => {
+    try {
+      const { storeId } = req.params;
+      await Store.findByIdAndRemove(storeId);
 
-    res.status(200).send();
-  } catch (error) {
-    res.status(500).json(error);
+      res.status(200).send();
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
-});
+);
 
 module.exports = router;

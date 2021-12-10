@@ -3,9 +3,10 @@ const router = express.Router();
 const Product = require("./../models/product.model");
 
 // POST /api/products
+// remove user info when testing
 router.post("/api/products", async (req, res, next) => {
   try {
-    const currentUserId = req.payload._id;
+    // const currentUserId = req.payload._id;
 
     const { name, image, description, price } = req.body;
 
@@ -14,7 +15,7 @@ router.post("/api/products", async (req, res, next) => {
       image,
       description,
       price,
-      storeOwner: currentUserId,
+      //storeOwner: currentUserId,
     });
 
     res.status(201).json(newProduct);
@@ -53,7 +54,7 @@ router.put("/api/products/:productId", async (req, res, next) => {
 
     const { name, image, description, price } = req.body;
 
-    const updatedProduct = await Product.findByIdAndUpdate({
+    const updatedProduct = await Product.findByIdAndUpdate(productId, {
       name,
       image,
       description,

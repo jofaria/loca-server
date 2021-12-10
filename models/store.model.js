@@ -8,7 +8,11 @@ const storeSchema = new Schema({
     required: true,
   },
   storeOwner: { type: Schema.Types.ObjectId, ref: "Owner", default: null },
-  logo: { type: String, required: true },
+  logo: {
+    type: String,
+    required: true,
+    default: "https://www.aquiaolado.pt/Content/img/default-logo.png",
+  },
   coverImg: {
     type: String,
     default:
@@ -21,22 +25,19 @@ const storeSchema = new Schema({
     coordinates: [Number],
   },
   description: { type: String, required: true },
-  category: [
-    {
-      type: String,
-      required: true,
-      enum: [
-        "Organic materials",
-        "Recycled materials",
-        "Made locally",
-        "Cruelty-free",
-        "Ethically-made",
-        "Vintage / Second-hand",
-      ],
+  categories: {
+    type: String,
+    value: {
+      organicMaterials: false,
+      recycledMaterials: false,
+      madeLocally: false,
+      madeEthically: false,
+      crueltyFree: false,
+      secondHand: false,
     },
-  ],
+  },
   website: String,
-  instagram: String,
+  instagram: { type: String, default: "https://instagram.com" },
 });
 
 module.exports = model("Store", storeSchema);

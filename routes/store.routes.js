@@ -7,9 +7,9 @@ const { isAuthenticated } = require("./../middleware/jwt.middleware");
 router.post("/api/stores", isAuthenticated, async (req, res, next) => {
   try {
     // get the user that is logged in and populate the owner
-
-    const currentUserId = req.payload;
     console.log("IN IT");
+    const { _id } = req.payload;
+    const currentUserId = req.payload;
     console.log(req.payload);
     console.log(req.payload._id);
 
@@ -29,8 +29,8 @@ router.post("/api/stores", isAuthenticated, async (req, res, next) => {
 
     const newStore = await Store.create({
       storeName,
-      storeOwner: currentUserId,
       logo,
+      storeOwner,
       coverImg,
       location,
       description,

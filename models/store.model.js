@@ -10,7 +10,6 @@ const storeSchema = new Schema({
   storeOwner: { type: Schema.Types.ObjectId, ref: "Owner", default: null },
   logo: {
     type: String,
-    required: true,
     default: "https://www.aquiaolado.pt/Content/img/default-logo.png",
   },
   coverImg: {
@@ -38,6 +37,7 @@ const storeSchema = new Schema({
   },
   website: String,
   instagram: { type: String, default: "https://instagram.com" },
+  products: [{ type: Schema.Types.ObjectId, ref: "Product", default: null }],
 });
 
 module.exports = model("Store", storeSchema);

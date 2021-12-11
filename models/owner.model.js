@@ -13,8 +13,7 @@ const ownerSchema = new Schema({
     required: true,
     min: [6, "must be at least 6 numbers"],
   },
-  store: { type: Schema.Types.ObjectId, ref: "Store", default: null },
-  products: [{ type: Schema.Types.ObjectId, ref: "Product", default: null }],
+  store: [{ type: Schema.Types.ObjectId, ref: "Store", default: null }],
 });
 
 module.exports = model("Owner", ownerSchema);

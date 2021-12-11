@@ -104,9 +104,12 @@ router.post("/auth/login", async (req, res, next) => {
       const payload = {
         _id: foundOwner._id,
         email: foundOwner.email,
-        username: foundOwner.name,
+        username: foundOwner.username,
+        phone: foundOwner.phone,
         role: foundOwner.role, // 'admin' or 'user'
         image: foundOwner.image,
+        store: foundOwner.store,
+        products: foundOwner.products,
       };
 
       // Create a JWT with the payload

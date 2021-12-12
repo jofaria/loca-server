@@ -18,7 +18,7 @@ const storeSchema = new Schema({
       "https://blog.urbanflowers.com.br/wp-content/uploads/2019/03/282119-o-que-e-slow-fashion-descubra-essa-forma-de-consumo-consciente.jpg",
   },
   location: {
-    type: {
+    address: {
       type: String,
     },
     coordinates: [Number],

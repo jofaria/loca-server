@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Store = require("./../models/store.model");
 const { isAuthenticated } = require("./../middleware/jwt.middleware");
+const Owner = require("./../models/owner.model");
 
 // remove middleware and the user variables when testing
 router.post("/api/stores", isAuthenticated, async (req, res, next) => {
@@ -50,6 +51,7 @@ router.post("/api/stores", isAuthenticated, async (req, res, next) => {
 router.get("/api/stores", async (req, res, next) => {
   try {
     const allStores = await Store.find().populate("storeOwner");
+
     res.status(200).json(allStores);
   } catch (error) {
     res.status(500).json(error);

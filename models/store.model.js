@@ -40,4 +40,6 @@ const storeSchema = new Schema({
   products: [{ type: Schema.Types.ObjectId, ref: "Product", default: null }],
 });
 
+storeSchema.index({ location: "2dsphere" });
+
 module.exports = model("Store", storeSchema);

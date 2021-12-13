@@ -5,6 +5,7 @@ router.get("/", (req, res, next) => {
   res.json("Welcome to Loca's API!");
 });
 
+//fileUploader.single("logo")
 router.post("/api/upload", fileUploader.single("logo"), (req, res, next) => {
   if (!req.file) {
     next(new Error("No file uploaded"));

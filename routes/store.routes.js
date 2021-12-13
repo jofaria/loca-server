@@ -9,17 +9,12 @@ const Owner = require("./../models/owner.model");
 router.post("/api/stores", isAuthenticated, async (req, res, next) => {
   try {
     // get the user that is logged in and populate the owner
-    console.log("IN IT");
-    const { _id } = req.payload;
-    const currentUserId = req.payload;
-    console.log(req.payload);
-    console.log(req.payload._id);
 
     const {
       storeName,
       logoURL,
       storeOwner,
-      coverImg,
+      // coverImg,
       location,
       description,
       category,
@@ -33,16 +28,17 @@ router.post("/api/stores", isAuthenticated, async (req, res, next) => {
       storeName,
       logo: logoURL,
       storeOwner,
-      coverImg,
+      // coverImg: coverImg,
       location,
       description,
       category,
       website,
       instagram,
     });
-    console.log(newStore);
-    //console.log(currentUserId);
 
+    await Owner.findByIdAndUpdate(req.payload._id, {
+      $push: { store: newStore._id },
+    });
     res.status(201).json(newStore);
   } catch (error) {
     res.status(500).json(error);
@@ -52,7 +48,7 @@ router.post("/api/stores", isAuthenticated, async (req, res, next) => {
 router.get("/api/stores", async (req, res, next) => {
   try {
     const allStores = await Store.find().populate("storeOwner");
-
+    console.log(allStores);
     res.status(200).json(allStores);
   } catch (error) {
     res.status(500).json(error);

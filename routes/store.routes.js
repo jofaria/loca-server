@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const Store = require("./../models/store.model");
-const { isAuthenticated } = require("./../middleware/jwt.middleware");
-const Owner = require("./../models/owner.model");
+const { isAuthenticated, isOwner } = require("./../middleware/jwt.middleware");
 
+const Owner = require("./../models/owner.model");
 // remove middleware and the user variables when testing
+
 router.post("/api/stores", isAuthenticated, async (req, res, next) => {
   try {
     // get the user that is logged in and populate the owner
@@ -16,7 +17,7 @@ router.post("/api/stores", isAuthenticated, async (req, res, next) => {
 
     const {
       storeName,
-      logo,
+      logoURL,
       storeOwner,
       coverImg,
       location,
@@ -30,7 +31,7 @@ router.post("/api/stores", isAuthenticated, async (req, res, next) => {
 
     const newStore = await Store.create({
       storeName,
-      logo,
+      logo: logoURL,
       storeOwner,
       coverImg,
       location,
@@ -39,8 +40,8 @@ router.post("/api/stores", isAuthenticated, async (req, res, next) => {
       website,
       instagram,
     });
-
-    console.log(currentUserId);
+    console.log(newStore);
+    //console.log(currentUserId);
 
     res.status(201).json(newStore);
   } catch (error) {
@@ -68,24 +69,15 @@ router.get("/api/stores/:storeId", async (req, res, next) => {
   }
 });
 
-router.put("/api/stores/:storeId", isAuthenticated, async (req, res, next) => {
-  try {
-    const { storeId } = req.params;
+router.put(
+  "/api/stores/:storeId",
+  isAuthenticated,
+  isOwner,
+  async (req, res, next) => {
+    try {
+      const { storeId } = req.params;
 
-    const {
-      storeName,
-      logo,
-      coverImg,
-      location,
-      description,
-      category,
-      website,
-      instagram,
-    } = req.body;
-
-    const updatedStore = await Store.findByIdAndUpdate(
-      storeId,
-      {
+      const {
         storeName,
         logo,
         coverImg,
@@ -94,19 +86,34 @@ router.put("/api/stores/:storeId", isAuthenticated, async (req, res, next) => {
         category,
         website,
         instagram,
-      },
-      { new: true }
-    );
+      } = req.body;
 
-    res.status(201).json(updatedStore);
-  } catch (error) {
-    res.status(500).json(error);
+      const updatedStore = await Store.findByIdAndUpdate(
+        storeId,
+        {
+          storeName,
+          logo,
+          coverImg,
+          location,
+          description,
+          category,
+          website,
+          instagram,
+        },
+        { new: true }
+      );
+
+      res.status(201).json(updatedStore);
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
-});
+);
 
 router.delete(
   "/api/stores/:storeId",
   isAuthenticated,
+  isOwner,
   async (req, res, next) => {
     try {
       const { storeId } = req.params;

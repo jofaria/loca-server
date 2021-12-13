@@ -1,6 +1,7 @@
 // middleware/jwt.middleware.js
 
 const jwt = require("express-jwt");
+const Store = require("../models/store.model");
 
 // Instantiate the JWT token validation middleware
 const isAuthenticated = jwt({
@@ -26,16 +27,33 @@ function getTokenFromHeaders(req) {
 }
 
 // CUSTOM MIDDLEWARE
-function isAdmin(req, res, next) {
-  if (req.payload && req.payload.role === "admin") {
-    next();
-  } else {
-    throw new Error("User is not an admin");
+// function isAdmin(req, res, next) {
+//   if (req.payload && req.payload.role === "admin") {
+//     next();
+//   } else {
+//     throw new Error("User is not an admin");
+//   }
+// }
+
+function isOwner(req, res, next) {
+  try {
+    const fetchOwner = async () => {
+      const storeOwner = await Store.find({ storeOwner: req.payload._id });
+
+      if (req.payload && req.payload._id === Store.storeOwner) {
+        next();
+      } else {
+        console.log("not the owner");
+      }
+    };
+    fetchOwner();
+  } catch (error) {
+    console.log(error);
   }
 }
 
 // Export the middleware so that we can use it to create a protected routes
 module.exports = {
   isAuthenticated,
-  isAdmin,
+  isOwner,
 };

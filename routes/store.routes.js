@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Store = require("./../models/store.model");
 const { isAuthenticated, isOwner } = require("./../middleware/jwt.middleware");
-
+const geocoder = require("./../utils/node-geocoder");
 const Owner = require("./../models/owner.model");
 // remove middleware and the user variables when testing
 
@@ -35,6 +35,11 @@ router.post("/api/stores", isAuthenticated, async (req, res, next) => {
       website,
       instagram,
     });
+
+    console.log(req.body);
+
+    // const res = await geocoder.geocode(address);
+    // console.log(res);
 
     await Owner.findByIdAndUpdate(req.payload._id, {
       $push: { store: newStore._id },

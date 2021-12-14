@@ -2,8 +2,11 @@ const NodeGeocoder = require("node-geocoder");
 
 const options = {
   provider: process.env.GEOCODER_PROVIDER,
-  apiKey: process.env.GEOCODER_SECRET, // for Mapquest, OpenCage, Google Premier
-  formatter: null, // 'gpx', 'string', ...
+  httpAdapter: "https",
+  apiKey: process.env.GEOCODER_KEY,
+  formatter: null,
 };
 
 const geocoder = NodeGeocoder(options);
+
+module.exports = geocoder;

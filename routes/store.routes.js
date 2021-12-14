@@ -8,42 +8,36 @@ const Owner = require("./../models/owner.model");
 
 router.post("/api/stores", isAuthenticated, async (req, res, next) => {
   try {
-    // get the user that is logged in and populate the owner
-
     const {
       storeName,
       logoURL,
       storeOwner,
+      address,
       // coverImg,
-      location,
       description,
-      category,
       website,
       instagram,
     } = req.body;
 
-    console.log(req.body);
+    console.log("req.body 1", req.body);
 
     const newStore = await Store.create({
       storeName,
       logo: logoURL,
       storeOwner,
+      address,
       // coverImg: coverImg,
-      location,
       description,
-      category,
       website,
       instagram,
     });
 
-    console.log(req.body);
-
-    // const res = await geocoder.geocode(address);
-    // console.log(res);
+    console.log("req.body 2", req.body);
 
     await Owner.findByIdAndUpdate(req.payload._id, {
       $push: { store: newStore._id },
     });
+
     res.status(201).json(newStore);
   } catch (error) {
     res.status(500).json(error);

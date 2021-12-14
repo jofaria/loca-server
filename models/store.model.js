@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
+const geocoder = require("../utils/node-geocoder");
 
 const storeSchema = new Schema({
   storeName: {
@@ -17,11 +18,20 @@ const storeSchema = new Schema({
     default:
       "https://blog.urbanflowers.com.br/wp-content/uploads/2019/03/282119-o-que-e-slow-fashion-descubra-essa-forma-de-consumo-consciente.jpg",
   },
+  address: {
+    type: String,
+    required: [true, "Please add a complete address"],
+  },
   location: {
-    address: {
+    type: {
       type: String,
+      enum: ["Point"],
     },
-    coordinates: [Number],
+    coordinates: {
+      type: [Number],
+      index: "2dsphere",
+    },
+    formattedAddress: String,
   },
   description: { type: String, required: true },
   categories: {
@@ -40,6 +50,18 @@ const storeSchema = new Schema({
   products: [{ type: Schema.Types.ObjectId, ref: "Product", default: null }],
 });
 
-storeSchema.index({ location: "2dsphere" });
+storeSchema.pre("save", async function (next) {
+  const loc = await geocoder.geocode(this.address);
+  console.log("this.address", this.address);
+
+  this.location = {
+    type: "Point",
+    coordinates: [loc[0].longitude, loc[0].latitude],
+    formattedAddress: loc[0].formattedAddress,
+  };
+
+  this.address = undefined;
+  next();
+});
 
 module.exports = model("Store", storeSchema);

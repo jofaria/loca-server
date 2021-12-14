@@ -64,34 +64,39 @@ router.get("/api/stores/:storeId", async (req, res, next) => {
   }
 });
 
+// add isOwner middleware
+
 router.put(
-  "/api/stores/:storeId",
+  "/api/stores/edit/:storeId",
   isAuthenticated,
-  isOwner,
   async (req, res, next) => {
     try {
       const { storeId } = req.params;
 
+      console.log("storeId in edit", storeId);
+
       const {
         storeName,
-        logo,
-        coverImg,
-        location,
+        logoURL,
+        storeOwner,
+        address,
+        // coverImg,
         description,
-        category,
         website,
         instagram,
       } = req.body;
+
+      console.log("in store routes edit", req.body);
 
       const updatedStore = await Store.findByIdAndUpdate(
         storeId,
         {
           storeName,
-          logo,
-          coverImg,
-          location,
+          logo: logoURL,
+          storeOwner,
+          address,
+          // coverImg: coverImg,
           description,
-          category,
           website,
           instagram,
         },
@@ -105,10 +110,11 @@ router.put(
   }
 );
 
+// add isOwner middleware
+
 router.delete(
-  "/api/stores/:storeId",
+  "/api/stores/delete/:storeId",
   isAuthenticated,
-  isOwner,
   async (req, res, next) => {
     try {
       const { storeId } = req.params;

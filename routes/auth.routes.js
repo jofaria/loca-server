@@ -8,13 +8,13 @@ const Owner = require("../models/owner.model");
 const { isAuthenticated } = require("./../middleware/jwt.middleware");
 
 const saltRounds = 10;
-
+console.log("here inside auth routes");
 // POST /auth/signup
 router.post("/auth/signup", async (req, res, next) => {
   try {
     // Get the data from req.body
     const { email, password, username, phone } = req.body;
-
+    console.log(req.body);
     // Validate that values are not empty strings
     if (email === "" || password === "" || username === "" || phone === "") {
       res

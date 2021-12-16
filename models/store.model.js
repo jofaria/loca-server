@@ -60,7 +60,7 @@ storeSchema.pre("save", async function (next) {
     formattedAddress: loc[0].formattedAddress,
   };
 
-  this.address = undefined;
+  // this.address = undefined;
   next();
 });
 

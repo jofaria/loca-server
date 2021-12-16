@@ -52,7 +52,6 @@ const storeSchema = new Schema({
 
 storeSchema.pre("save", async function (next) {
   const loc = await geocoder.geocode(this.address);
-  console.log("this.address", this.address);
 
   this.location = {
     type: "Point",

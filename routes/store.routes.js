@@ -19,8 +19,6 @@ router.post("/api/stores", isAuthenticated, async (req, res, next) => {
       instagram,
     } = req.body;
 
-    console.log("req.body 1", req.body);
-
     const newStore = await Store.create({
       storeName,
       logo: logoURL,
@@ -31,8 +29,6 @@ router.post("/api/stores", isAuthenticated, async (req, res, next) => {
       website,
       instagram,
     });
-
-    console.log("req.body 2", req.body);
 
     await Owner.findByIdAndUpdate(req.payload._id, {
       $push: { store: newStore._id },
@@ -47,7 +43,6 @@ router.post("/api/stores", isAuthenticated, async (req, res, next) => {
 router.get("/api/stores", async (req, res, next) => {
   try {
     const allStores = await Store.find().populate("storeOwner");
-    console.log(allStores);
     res.status(200).json(allStores);
   } catch (error) {
     res.status(500).json(error);
@@ -73,8 +68,6 @@ router.put(
     try {
       const { storeId } = req.params;
 
-      console.log("storeId in edit", storeId);
-
       const {
         storeName,
         logoURL,
@@ -85,8 +78,6 @@ router.put(
         website,
         instagram,
       } = req.body;
-
-      console.log("in store routes edit", req.body);
 
       const updatedStore = await Store.findByIdAndUpdate(
         storeId,

@@ -6,7 +6,7 @@ const ownerSchema = new Schema({
   username: { type: String, unique: true, required: true },
   role: { type: String, enum: ["admin", "user"], default: "user" },
   email: { type: String, unique: true, required: true },
-  password: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
   phone: {
     type: Number,
     unique: true,

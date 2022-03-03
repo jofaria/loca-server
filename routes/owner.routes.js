@@ -3,7 +3,7 @@ const router = express.Router();
 const Owner = require("../models/owner.model");
 const { isAuthenticated } = require("./../middleware/jwt.middleware");
 
-// GET /api/users/:id  - Get current user info
+// GET /api/owner/:id  - Get current user info
 router.get("/api/owners/:id", isAuthenticated, async (req, res, next) => {
   try {
     // If the user is authenticated we can access the JWT payload via req.payload
@@ -17,7 +17,7 @@ router.get("/api/owners/:id", isAuthenticated, async (req, res, next) => {
   }
 });
 
-// PUT /api/users/current  - Update the current user
+// PUT /api/owner/current  - Update the current user
 router.put("/api/owners/current", isAuthenticated, async (req, res, next) => {
   try {
     // If the user is authenticated we can access the JWT payload via req.payload
